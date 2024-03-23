@@ -1,5 +1,6 @@
 package com.studyproject.myhome.controller;
 
+import com.studyproject.myhome.exception.PageValidationException;
 import com.studyproject.myhome.model.Board;
 import com.studyproject.myhome.repository.BoardRepository;
 import com.studyproject.myhome.validator.BoardValidator;
@@ -30,13 +31,24 @@ public class BoardController {
                                @RequestParam(required = false, defaultValue = "") String searchText) {
         Page<Board> boards = boardRepository
                 .findByTitleContainingOrContentContaining(searchText, searchText, pageable);
-        int startPage = pagingNumber*(page/pagingNumber)+1;
-        int endPage = getEndPage(boards, page);
+        validatePageNumber(boards, page);
+        int startPage = 1;
+        int endPage = 1;
+        if(boards.hasContent()) {
+            startPage = pagingNumber*(page/pagingNumber)+1;
+            endPage = getEndPage(boards, page);
+        }
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("pagingNumber", pagingNumber);
         model.addAttribute("boards", boards);
         return "board/list";
+    }
+
+    private void validatePageNumber(Page<Board> boards, int pageNumber) {
+        if (pageNumber < 0 || (pageNumber >= boards.getTotalPages() && boards.getTotalPages() > 0)) {
+            throw new PageValidationException("Invalid page number.");
+        }
     }
 
     private int getEndPage(Page<Board> boards, int page) {
