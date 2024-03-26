@@ -30,7 +30,7 @@ public class BoardController {
                                @RequestParam(defaultValue = "0") int page,
                                @RequestParam(required = false, defaultValue = "") String searchText) {
         Page<Board> boards = boardRepository
-                .findByTitleContainingOrContentContaining(searchText, searchText, pageable);
+                .findByTitleContainingOrContentContainingOrderByIdDesc(searchText, searchText, pageable);
         validatePageNumber(boards, page);
         int startPage = 1;
         int endPage = 1;
