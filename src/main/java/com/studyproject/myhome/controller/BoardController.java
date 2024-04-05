@@ -2,7 +2,7 @@ package com.studyproject.myhome.controller;
 
 import com.studyproject.myhome.exception.PageValidationException;
 import com.studyproject.myhome.model.Board;
-import com.studyproject.myhome.repository.BoardRepository;
+import com.studyproject.myhome.service.BoardService;
 import com.studyproject.myhome.validator.BoardValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
-    private final BoardRepository boardRepository;
+    private final BoardService boardService;
     private final BoardValidator boardValidator;
     private static final Integer pagingNumber = 5;
 
@@ -29,7 +29,7 @@ public class BoardController {
     public String list(Model model, @PageableDefault(size = 2) Pageable pageable,
                                @RequestParam(defaultValue = "0") int page,
                                @RequestParam(required = false, defaultValue = "") String searchText) {
-        Page<Board> boards = boardRepository
+        Page<Board> boards = boardService
                 .findByTitleContainingOrContentContainingOrderByIdDesc(searchText, searchText, pageable);
         validatePageNumber(boards, page);
         int startPage = 1;
@@ -61,7 +61,7 @@ public class BoardController {
         if(id == null){
             model.addAttribute("board", new Board());
         } else{
-            Board board = boardRepository.findById(id).orElse(null);
+            Board board = boardService.findBoardById(id);
             model.addAttribute("board", board);
         }
         return "board/form";
@@ -73,7 +73,7 @@ public class BoardController {
         if(bindingResult.hasErrors()) {
             return "board/form";
         }
-        boardRepository.save(board);
+        boardService.saveBoard(board);
         return "redirect:/board/list";
     }
 }
