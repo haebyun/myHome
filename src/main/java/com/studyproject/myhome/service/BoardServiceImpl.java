@@ -1,7 +1,9 @@
 package com.studyproject.myhome.service;
 
 import com.studyproject.myhome.model.Board;
+import com.studyproject.myhome.model.Member;
 import com.studyproject.myhome.repository.BoardRepository;
+import com.studyproject.myhome.repository.MemberRepository;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
 
-    public BoardServiceImpl(BoardRepository boardRepository) {
+    public BoardServiceImpl(BoardRepository boardRepository, MemberRepository memberRepository) {
         this.boardRepository = boardRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -28,7 +32,9 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Board saveBoard(Board newBoard) {
+    public Board saveBoard(String username, Board newBoard) {
+        Member member = memberRepository.findByUsername(username);
+        newBoard.setMember(member);
         return boardRepository.save(newBoard);
     }
 

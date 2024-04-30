@@ -4,6 +4,7 @@ import com.studyproject.myhome.model.Board;
 import com.studyproject.myhome.service.BoardService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,15 +25,15 @@ public class BoardAPIController {
     @GetMapping("/boards")
     List<Board> all(@RequestParam(required = false, defaultValue = "") String title,
                     @RequestParam(required = false, defaultValue = "") String content) {
-        if(StringUtils.isEmpty(title) && StringUtils.isEmpty(content)) {
+        if (StringUtils.isEmpty(title) && StringUtils.isEmpty(content)) {
             return boardService.findBoards();
         }
         return boardService.findByTitleOrContent(title, content);
     }
 
     @PostMapping("/boards")
-    Board newBoard(@RequestBody Board newBoard) {
-        return boardService.saveBoard(newBoard);
+    Board newBoard(@RequestBody Board newBoard, Authentication authentication) {
+        return boardService.saveBoard(authentication.getName(), newBoard);
     }
 
     @GetMapping("/boards/{id}")
