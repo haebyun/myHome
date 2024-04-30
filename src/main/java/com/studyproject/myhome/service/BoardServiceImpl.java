@@ -3,15 +3,20 @@ package com.studyproject.myhome.service;
 import com.studyproject.myhome.model.Board;
 import com.studyproject.myhome.repository.BoardRepository;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
+@Transactional
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
+
+    public BoardServiceImpl(BoardRepository boardRepository) {
+        this.boardRepository = boardRepository;
+    }
+
     @Override
     public List<Board> findBoards() {
         return boardRepository.findAll();
@@ -52,8 +57,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Page<Board> findByTitleContainingOrContentContainingOrderByIdDesc(String title, String content,
-                                                                             Pageable pageable) {
+    public Page<Board> findByTitleContainingOrContentContainingOrderByIdDesc(String title, String content, Pageable pageable) {
         return boardRepository.findByTitleContainingOrContentContainingOrderByIdDesc(title, content, pageable);
     }
 }
