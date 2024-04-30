@@ -4,19 +4,23 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.ManyToMany;
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class Board {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    @Size(min=2, max=30, message = "제목은 2자 이상 30자 이하입니다.")
-    private String title;
-    private String content;
+    private String name;
+
+    @ManyToMany(mappedBy = "roles")
+    private List<Member> members;
 }

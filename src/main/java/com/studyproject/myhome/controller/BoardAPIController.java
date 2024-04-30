@@ -1,7 +1,7 @@
 package com.studyproject.myhome.controller;
 
 import com.studyproject.myhome.model.Board;
-import com.studyproject.myhome.repository.BoardRepository;
+import com.studyproject.myhome.service.BoardService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,45 +16,37 @@ import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.util.StringUtils;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class BoardAPIController {
-    private final BoardRepository repository;
+    private final BoardService boardService;
 
     @GetMapping("/boards")
     List<Board> all(@RequestParam(required = false, defaultValue = "") String title,
                     @RequestParam(required = false, defaultValue = "") String content) {
         if(StringUtils.isEmpty(title) && StringUtils.isEmpty(content)) {
-            return repository.findAll();
+            return boardService.findBoards();
         }
-        return repository.findByTitleOrContent(title, content);
+        return boardService.findByTitleOrContent(title, content);
     }
+
     @PostMapping("/boards")
     Board newBoard(@RequestBody Board newBoard) {
-        return repository.save(newBoard);
+        return boardService.saveBoard(newBoard);
     }
 
     @GetMapping("/boards/{id}")
     Board one(@PathVariable Long id) {
-        return repository.findById(id).orElse(null);
+        return boardService.findBoardById(id);
     }
 
     @PutMapping("/boards/{id}")
     Board replaceBoard(@RequestBody Board newBoard, @PathVariable Long id) {
-        return repository.findById(id)
-                .map(board -> {
-                    board.setTitle(newBoard.getTitle());
-                    board.setContent(newBoard.getContent());
-                    return repository.save(board);
-                })
-                .orElseGet(()-> {
-                    newBoard.setId(id);
-                    return repository.save(newBoard);
-                });
+        return boardService.replaceBoard(newBoard, id);
     }
 
     @DeleteMapping("/boards/{id}")
     void deleteBoard(@PathVariable Long id) {
-        repository.deleteById(id);
+        boardService.deleteBoardById(id);
     }
 }
