@@ -12,7 +12,7 @@ public interface BoardService {
 
     List<Board> findByTitleOrContent(String title, String content);
 
-    Board saveBoard(Board newBoard);
+    Board saveBoard(String username, Board newBoard);
 
     Board findBoardById(Long id);
 

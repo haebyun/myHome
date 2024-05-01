@@ -43,9 +43,9 @@
         </thead>
         <tbody>
         <tr th:each="board : ${boards}">
-            <td th:text="${board.id}">Mark</td>
-            <td><a th:text="${board.title}" th:href="@{/board/form(id=${board.id})}">Otto</a></td>
-            <td>홍길동</td>
+            <td th:text="${board.id}" th:style="${'width:80px;'}">Mark</td>
+            <td th:style="${'width:500px;'}"><a th:text="${board.title}" th:href="@{/board/form(id=${board.id})}" >Otto</a></td>
+            <td th:text="${board.member.username}" th:style="${'width:150px;'}">홍길동</td>
         </tr>
     </table>
     <nav aria-label="Page navigation example">
