@@ -6,6 +6,7 @@ import com.studyproject.myhome.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -18,6 +19,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public Member save(Member member) {
         String encodedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encodedPassword);

@@ -47,7 +47,8 @@ public class BoardAPIController {
     }
 
     @DeleteMapping("/boards/{id}")
-    void deleteBoard(@PathVariable Long id) {
-        boardService.deleteBoardById(id);
+    void deleteBoard(@PathVariable Long id, Authentication authentication){
+        String username = authentication.getName();
+        boardService.deleteBoardById(id, username);
     }
 }

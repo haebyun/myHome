@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
@@ -32,6 +31,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public Board saveBoard(String username, Board newBoard) {
         Member member = memberRepository.findByUsername(username);
         newBoard.setMember(member);
@@ -44,6 +44,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public Board replaceBoard(Board newBoard, Long id) {
         return boardRepository.findById(id)
                 .map(board -> {
@@ -58,7 +59,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void deleteBoardById(Long id) {
+    @Transactional
+    public void deleteBoardById(Long id, String username) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid board Id:" + id));
+        if(!board.getMember().getUsername().equals(username)) {
+            throw new IllegalStateException("Cannot delete other user's post");
+        }
         boardRepository.deleteById(id);
     }
 
