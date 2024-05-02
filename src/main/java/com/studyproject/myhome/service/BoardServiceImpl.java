@@ -5,12 +5,14 @@ import com.studyproject.myhome.model.Member;
 import com.studyproject.myhome.repository.BoardRepository;
 import com.studyproject.myhome.repository.MemberRepository;
 import java.util.List;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Primary
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
