@@ -18,7 +18,7 @@ public interface BoardService {
 
     Board replaceBoard(Board newBoard, Long id);
 
-    void deleteBoardById(Long id);
+    void deleteBoardById(Long id, String username);
 
     Page<Board> findByTitleContainingOrContentContainingOrderByIdDesc(String searchText, String searchText1, Pageable pageable);
 }
